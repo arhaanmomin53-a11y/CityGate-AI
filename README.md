@@ -293,7 +293,7 @@ screenshots/
 ## Clone Repository
 
 ```bash
-git clone https://github.com/yourusername/CityGate.git
+git clone https:/arhaanmomin53-a11y/github.com//CityGate.git
 ```
 
 ---
