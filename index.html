@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CityGate — Municipal Permit Compliance</title>
+    <meta name="description" content="CityGate: AI-powered municipal permit assistant. Multilingual intake, document parsing, city code lookup, and human-in-the-loop form submission.">
+    <link rel="stylesheet" href="index.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-shell">
+
+        <!-- ═══════════════════════════════════════════════════ -->
+        <!-- TOP NAVBAR                                         -->
+        <!-- ═══════════════════════════════════════════════════ -->
+        <nav class="top-navbar">
+            <div class="navbar-left">
+                <span class="brand-logo">CityGate</span>
+                <span class="lang-badge" id="lang-indicator" aria-live="polite">EN</span>
+            </div>
+            <div class="navbar-center">
+                <a href="#" class="nav-link active" id="nav-top-queue">Queue</a>
+                <a href="#" class="nav-link" id="nav-top-analysis">Analysis</a>
+                <a href="#" class="nav-link" id="nav-top-advocacy">Advocacy</a>
+                <a href="#" class="nav-link" id="nav-top-archives">Archives</a>
+            </div>
+            <div class="navbar-right">
+                <div class="search-box">
+                    <svg class="search-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                    <input type="text" placeholder="Search Insights..." class="search-input" id="search-insights">
+                </div>
+                <button class="icon-btn" title="Notifications" aria-label="Notifications">
+                    <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+                </button>
+                <button class="icon-btn" title="Help" aria-label="Help">
+                    <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                </button>
+                <button class="avatar-btn" title="Profile" aria-label="Profile">
+                    <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </button>
+            </div>
+        </nav>
+
+        <!-- ═══════════════════════════════════════════════════ -->
+        <!-- APP BODY  (sidebar + main)                         -->
+        <!-- ═══════════════════════════════════════════════════ -->
+        <div class="app-body">
+
+            <!-- LEFT SIDEBAR -->
+            <aside class="sidebar">
+                <div class="sidebar-top">
+                    <div class="project-selector">
+                        <span class="project-label">Select Project</span>
+                        <span class="project-name">CITY GATE</span>
+                    </div>
+                    <nav class="sidebar-nav">
+                        <a href="#" class="sidebar-link active" id="nav-queue">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                            Queue
+                        </a>
+                        <a href="#" class="sidebar-link" id="nav-analysis">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                            Analysis
+                        </a>
+                        <a href="#" class="sidebar-link" id="nav-advocacy">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+                            Advocacy
+                        </a>
+                        <a href="#" class="sidebar-link" id="nav-archives">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+                            Archives
+                        </a>
+                    </nav>
+                </div>
+                <div class="sidebar-bottom">
+                    <button class="btn-new-rfi" id="btn-new-rfi">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+                        New Permit
+                    </button>
+                </div>
+            </aside>
+
+            <!-- MAIN CONTENT AREA -->
+            <main class="main-content">
+
+                <!-- VIEW 1: QUEUE & TRIAGE -->
+                <div id="view-queue" class="app-view active-view">
+                    <!-- Left Column: Ingestion Queue -->
+                    <section class="content-queue">
+                        <div class="section-header">
+                            <h2 class="section-title">Permit<br>Queue</h2>
+                            <span class="pending-badge" id="queue-count">0 Pending</span>
+                        </div>
+                        <div class="queue-scroll" id="queue-list">
+                            <!-- Empty State -->
+                            <div class="empty-queue-card" id="empty-feed-text">
+                                <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.2" class="empty-icon"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                                <p class="empty-title">Queue is empty.</p>
+                                <p class="empty-subtitle">New permit requests will appear here.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Right Column: Workspace -->
+                    <section class="content-workspace">
+
+                        <!-- Agent Status Tracker -->
+                        <div class="agent-tracker" id="agent-tracker" aria-label="Agent pipeline status" role="status">
+                            <div class="tracker-stages" id="tracker-stages"></div>
+                        </div>
+
+                        <!-- Toolbar: Tabs + Reasoning Engine -->
+                        <div class="workspace-toolbar">
+                            <div class="workspace-tabs">
+                                <button class="tab-btn active" data-tab="extracted-schema">3D View</button>
+                                <button class="tab-btn" data-tab="mcp-stream">Schematics</button>
+                            </div>
+                            <div class="reasoning-engine-indicator">
+                                <div class="agent-spinner" id="agent-spinner"></div>
+                                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" class="gear-icon"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+                                <span class="reasoning-label" id="agent-state-label">Agent Pipeline Idle</span>
+                            </div>
+                        </div>
+
+                        <!-- CAD Viewport (always visible) -->
+                        <div class="viewport-area">
+                            <span class="coordinates-chip" id="active-coordinates">NOT STAGED - SCAN PENDING</span>
+                            <div class="cad-canvas-container" id="cad-container">
+                                <canvas id="three-canvas" aria-label="Interactive 3D permit pipeline visualization"></canvas>
+                                <div class="three-tooltip" id="three-tooltip" aria-hidden="true"></div>
+                                <div class="three-hint" id="three-hint">Drag to orbit · Click buildings · Scroll to zoom</div>
+                                <div class="laser-scanner" id="laser-scanner"></div>
+                                <svg id="cad-blueprint" class="cad-blueprint-image" viewBox="0 0 800 600" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                                    <defs>
+                                        <pattern id="cadGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+                                            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255, 107, 0, 0.05)" stroke-width="1"/>
+                                            <path d="M 200 0 L 0 0 0 200" fill="none" stroke="rgba(255, 107, 0, 0.12)" stroke-width="1.5"/>
+                                        </pattern>
+                                    </defs>
+                                    <rect width="100%" height="100%" fill="url(#cadGrid)" />
+                                    
+                                    <g stroke="rgba(255, 107, 0, 0.2)" stroke-width="1.5" fill="none">
+                                        <line x1="80" y1="40" x2="80" y2="560" stroke-dasharray="5,5"/>
+                                        <line x1="280" y1="40" x2="280" y2="560" stroke-dasharray="5,5"/>
+                                        <line x1="480" y1="40" x2="480" y2="560" stroke-dasharray="5,5"/>
+                                        <line x1="680" y1="40" x2="680" y2="560" stroke-dasharray="5,5"/>
+                                        
+                                        <line x1="40" y1="100" x2="760" y2="100" stroke-dasharray="5,5"/>
+                                        <line x1="40" y1="300" x2="760" y2="300" stroke-dasharray="5,5"/>
+                                        <line x1="40" y1="500" x2="760" y2="500" stroke-dasharray="5,5"/>
+
+                                        <text x="80" y="30" fill="rgba(255, 107, 0, 0.3)" font-size="10" text-anchor="middle" font-family="'Share Tech Mono', monospace">F-10</text>
+                                        <text x="280" y="30" fill="rgba(255, 107, 0, 0.3)" font-size="10" text-anchor="middle" font-family="'Share Tech Mono', monospace">F-11</text>
+                                        <text x="480" y="30" fill="rgba(255, 107, 0, 0.3)" font-size="10" text-anchor="middle" font-family="'Share Tech Mono', monospace">F-12</text>
+                                        <text x="680" y="30" fill="rgba(255, 107, 0, 0.3)" font-size="10" text-anchor="middle" font-family="'Share Tech Mono', monospace">F-13</text>
+                                        
+                                        <rect x="120" y="140" width="520" height="320" rx="4" stroke="rgba(255, 107, 0, 0.2)" stroke-width="2"/>
+                                        <rect x="240" y="140" width="80" height="320" stroke="rgba(255, 107, 0, 0.1)" stroke-width="1"/>
+                                        <rect x="440" y="140" width="80" height="320" stroke="rgba(255, 107, 0, 0.1)" stroke-width="1"/>
+                                        
+                                        <rect x="72" y="92" width="16" height="16" fill="rgba(255, 107, 0, 0.05)"/>
+                                        <rect x="272" y="92" width="16" height="16" fill="rgba(255, 107, 0, 0.05)"/>
+                                        <rect x="472" y="92" width="16" height="16" fill="rgba(255, 107, 0, 0.05)"/>
+                                        <rect x="672" y="92" width="16" height="16" fill="rgba(255, 107, 0, 0.05)"/>
+                                    </g>
+                                </svg>
+                                <div class="hud-crosshair"></div>
+                                <div class="hud-corners"></div>
+
+                                <!-- Bounding Boxes -->
+                                <div class="cad-bounding-box invading-hvac" id="bbox-hvac" style="display: none;">
+                                    <span class="bbox-label">INVADING HVAC DUCT</span>
+                                </div>
+                                <div class="cad-bounding-box blocked-plumbing" id="bbox-plumbing" style="display: none;">
+                                    <span class="bbox-label">BLOCKED PLUMBING SLEEVE</span>
+                                </div>
+                                <div class="clearance-measure-line" id="clearance-line" style="display: none;">
+                                    <span class="clearance-text">CLEARANCE: <span id="clearance-val">8.5"</span></span>
+                                </div>
+
+                                <!-- Empty Viewport Placeholder -->
+                                <div class="empty-viewport-placeholder" id="empty-viewport-text">
+                                    <div class="wireframe-box"></div>
+                                    <p>NO ACTIVE PERMIT STAGED</p>
+                                    <span class="empty-subtitle">Start a permit pipeline to load the interactive 3D city model.</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tool Badges -->
+                        <div class="tool-badges">
+                            <span class="tool-badge tool-badge-primary">
+                                <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+                                BIM_SERVER_01
+                            </span>
+                            <span class="tool-badge">
+                                <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+                                ERP_BRIDGE
+                            </span>
+                            <span class="tool-badge">
+                                <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                                SPEC_MAPPER
+                            </span>
+                        </div>
+
+                        <!-- Extracted Schema / Tabbed Data Section -->
+                        <div class="schema-section">
+                            <div class="schema-header">
+                                <span class="schema-title">EXTRACTED SCHEMA</span>
+                                <span class="schema-version">JSON_V2.4</span>
+                            </div>
+                            <div class="tabs-content">
+                                <!-- Pane 1: Parsed Schema (default visible) -->
+                                <div class="tab-pane active" id="extracted-schema">
+                                    <div class="empty-tab-placeholder" id="empty-tab-1">
+                                        <p>Select an RFI to view extracted data...</p>
+                                    </div>
+                                    <pre id="schema-pre" style="display: none;"><code class="language-json" id="schema-code">Loading...</code></pre>
+                                </div>
+                                <!-- Pane 2: MCP / Database Search Logs -->
+                                <div class="tab-pane" id="mcp-stream">
+                                    <div class="empty-tab-placeholder" id="empty-tab-2">
+                                        <p>&gt; CONNECTING TO EXTERNAL DATABASES...</p>
+                                    </div>
+                                    <div class="console-output" id="mcp-log" style="display: none;">Loading...</div>
+                                </div>
+                                <!-- Pane 3: Resolution Plan -->
+                                <div class="tab-pane" id="engineering-fix">
+                                    <div class="empty-tab-placeholder" id="empty-tab-3">
+                                        <p>&gt; AWAITING RESOLUTION GENERATION...</p>
+                                    </div>
+                                    <div class="markdown-fix-container" id="proposed-fix-md" style="display: none;">Loading...</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </section>
+                </div>
+
+                <!-- VIEW 2: ANALYSIS (DATA VISUALISATIONS) -->
+                <div id="view-analysis" class="app-view">
+                    <section class="analysis-container">
+                        <div class="analysis-header">
+                            <h2 class="analysis-title">Conflict Analytics & Metrics</h2>
+                            <span class="analytics-badge">Live System Feed</span>
+                        </div>
+                        <div class="analytics-grid">
+                            <div class="metric-card">
+                                <span class="metric-label">TOTAL CONFLICTS INGESTED</span>
+                                <span class="metric-val" id="analytics-total-count">0</span>
+                                <div class="metric-trend green-text">+0% this week</div>
+                            </div>
+                            <div class="metric-card">
+                                <span class="metric-label">RESOLVED & COMMITTED</span>
+                                <span class="metric-val" id="analytics-resolved-count">0</span>
+                                <div class="metric-trend green-text">100% Success Rate</div>
+                            </div>
+                            <div class="metric-card">
+                                <span class="metric-label">AVG CLEARANCE ACHIEVED</span>
+                                <span class="metric-val" id="analytics-avg-clearance">0.0"</span>
+                                <div class="metric-trend green-text">> 18.0" Target</div>
+                            </div>
+                            <div class="metric-card">
+                                <span class="metric-label">PENDING SECURE CODE</span>
+                                <span class="metric-val" id="analytics-pending-count">0</span>
+                                <div class="metric-trend orange-text">Awaiting HITL</div>
+                            </div>
+                        </div>
+
+                        <div class="analysis-charts-row">
+                            <div class="chart-container">
+                                <div class="chart-header-title">CLASH DISTRIBUTION BY TRADE</div>
+                                <div class="chart-content">
+                                    <div class="trade-bar-row">
+                                        <span class="trade-bar-name">HVAC Crew</span>
+                                        <div class="trade-bar-wrapper">
+                                            <div class="trade-bar-fill fill-hvac" id="analytics-bar-hvac" style="width: 0%;"></div>
+                                        </div>
+                                        <span class="trade-bar-percentage" id="analytics-pct-hvac">0%</span>
+                                    </div>
+                                    <div class="trade-bar-row">
+                                        <span class="trade-bar-name">Plumbing Crew</span>
+                                        <div class="trade-bar-wrapper">
+                                            <div class="trade-bar-fill fill-plumbing" id="analytics-bar-plumbing" style="width: 0%;"></div>
+                                        </div>
+                                        <span class="trade-bar-percentage" id="analytics-pct-plumbing">0%</span>
+                                    </div>
+                                    <div class="trade-bar-row">
+                                        <span class="trade-bar-name">Electrical Crew</span>
+                                        <div class="trade-bar-wrapper">
+                                            <div class="trade-bar-fill fill-electrical" id="analytics-bar-electrical" style="width: 0%;"></div>
+                                        </div>
+                                        <span class="trade-bar-percentage" id="analytics-pct-electrical">0%</span>
+                                    </div>
+                                    <div class="trade-bar-row">
+                                        <span class="trade-bar-name">Structural Crew</span>
+                                        <div class="trade-bar-wrapper">
+                                            <div class="trade-bar-fill fill-structural" id="analytics-bar-structural" style="width: 0%;"></div>
+                                        </div>
+                                        <span class="trade-bar-percentage" id="analytics-pct-structural">0%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="chart-container">
+                                <div class="chart-header-title">SPATIAL RESOLUTION GRAPH</div>
+                                <div class="chart-content flex-center">
+                                    <div id="analytics-chart-placeholder" style="font-family: 'Share Tech Mono', monospace; font-size: 11px; color: var(--text-muted); text-align: center; padding: 20px;">
+                                        Awaiting resolution telemetry...
+                                    </div>
+                                    <svg viewBox="0 0 240 100" class="vector-chart-svg" width="100%" height="100%" id="analytics-chart-svg" style="display: none;">
+                                        <path id="analytics-chart-path" d="" fill="none" stroke="var(--accent-orange)" stroke-width="2.5"/>
+                                        <path id="analytics-chart-area" d="" fill="rgba(255,107,0,0.06)"/>
+                                        <line x1="10" y1="90" x2="230" y2="90" stroke="var(--border-card)" stroke-width="1"/>
+                                        <line x1="10" y1="90" x2="10" y2="10" stroke="var(--border-card)" stroke-width="1"/>
+                                        <line x1="10" y1="50" x2="230" y2="50" stroke="rgba(255,255,255,0.03)" stroke-dasharray="3,3"/>
+                                        <text x="130" y="15" fill="var(--accent-green)" font-size="6" font-family="'Share Tech Mono', monospace" text-anchor="middle">CORRIDOR CLEARANCE OVER TIME</text>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- VIEW 4: ADVOCACY (License Lifecycle) -->
+                <div id="view-advocacy" class="app-view">
+                    <section class="analysis-container">
+                        <div class="analysis-header">
+                            <h2 class="analysis-title">License Lifecycle & Renewal Alerts</h2>
+                            <button class="btn btn-outline-neutral" id="btn-check-renewals">Check Renewals</button>
+                        </div>
+                        <div class="analytics-grid" id="advocacy-stats">
+                            <div class="metric-card">
+                                <span class="metric-label">TRACKED LICENSES</span>
+                                <span class="metric-val" id="adv-licenses-count">0</span>
+                            </div>
+                            <div class="metric-card">
+                                <span class="metric-label">RENEWAL DUE</span>
+                                <span class="metric-val orange-text" id="adv-renewal-count">0</span>
+                            </div>
+                            <div class="metric-card">
+                                <span class="metric-label">SECURE ALERTS</span>
+                                <span class="metric-val" id="adv-alerts-count">0</span>
+                            </div>
+                            <div class="metric-card">
+                                <span class="metric-label">VAULT ENTRIES</span>
+                                <span class="metric-val" id="adv-vault-count">0</span>
+                            </div>
+                        </div>
+                        <div class="advocacy-panels">
+                            <div class="chart-container">
+                                <div class="chart-header-title">LICENSE PORTFOLIO</div>
+                                <div id="license-list" class="license-list"></div>
+                            </div>
+                            <div class="chart-container">
+                                <div class="chart-header-title">SECURE NOTIFICATIONS (PII-SAFE)</div>
+                                <div id="alerts-list" class="alerts-list"></div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- VIEW 3: ARCHIVES (RESOLVED HISTORY) -->
+                <div id="view-archives" class="app-view">
+                    <section class="archives-container">
+                        <div class="archives-header">
+                            <h2 class="archives-title">Committed RFI Archives</h2>
+                            <span class="archives-badge" id="archive-count-badge">0 Records</span>
+                        </div>
+                        <div class="archives-table-wrapper">
+                            <table class="archives-table">
+                                <thead>
+                                    <tr>
+                                        <th>Ticket ID</th>
+                                        <th>Reporting Crew</th>
+                                        <th>Grid Coordinate</th>
+                                        <th>Resolved Clearance</th>
+                                        <th>Commit Time</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="archives-tbody">
+                                    <tr class="empty-archive-row">
+                                        <td colspan="6" class="text-center">No RFIs committed yet. Resolved items will populate here.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                </div>
+
+            </main>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════ -->
+        <!-- BOTTOM FOOTER / GOVERNANCE BAR                     -->
+        <!-- ═══════════════════════════════════════════════════ -->
+        <footer class="app-footer">
+            <div class="footer-left">
+                <div class="validation-checklist">
+                    <div class="check-item" id="check-spatial">
+                        <span class="check-icon"></span>
+                        <span class="check-label">VECTOR<br><strong id="spatial-status">CLEARANCE</strong></span>
+                    </div>
+                    <div class="check-item" id="check-consensus">
+                        <span class="check-icon"></span>
+                        <span class="check-label">AI CHECK<br><strong id="consensus-status">0%</strong></span>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-right">
+                <!-- HITL Security Token (hidden until needed) -->
+                <div class="hitl-token-container" id="hitl-token-box" style="display: none;">
+                    <div class="token-glow-wrapper">
+                        <input type="text" id="auth-token" placeholder="Security Code..." class="token-input">
+                        <span class="token-helper-hint" id="token-hint">Hint: HITL-GATE-[N]</span>
+                    </div>
+                </div>
+                <button class="btn btn-outline-danger" id="btn-reject" disabled>REJECT</button>
+                <button class="btn btn-outline-neutral" id="btn-hold" disabled>Hold</button>
+                <button class="btn btn-filled-green" id="btn-approve" disabled>
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    All Good! Commit to ERP
+                </button>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════ -->
+    <!-- MODAL: New Permit Intake Form -->
+    <div class="modal-overlay" id="modal-overlay" style="display: none;" role="dialog" aria-labelledby="modal-title" aria-modal="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">New Permit Application</h3>
+                <button class="modal-close" id="modal-close" aria-label="Close modal">&times;</button>
+            </div>
+            <form id="clash-form" onsubmit="event.preventDefault();">
+                <div class="form-group">
+                    <label for="language-select">Language / Idioma</label>
+                    <select id="language-select" class="form-input" aria-describedby="lang-help">
+                        <option value="en">English</option>
+                        <option value="es">Español</option>
+                        <option value="vi">Tiếng Việt</option>
+                        <option value="ar">العربية</option>
+                    </select>
+                    <span id="lang-help" class="form-hint">Agents understand colloquial multilingual input</span>
+                </div>
+                <div class="form-group">
+                    <label for="form-type-select">Permit Type</label>
+                    <select id="form-type-select" class="form-input">
+                        <option value="business_license">Business License</option>
+                        <option value="zoning_permit">Zoning Permit</option>
+                        <option value="municipal_notice">Municipal Notice</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="conflict-description">Describe Your Request (Voice / Text)</label>
+                    <textarea id="conflict-description" class="form-input textarea-input" placeholder="Tell us about your business and permit needs..." aria-required="true"></textarea>
+                </div>
+                <div class="preset-buttons">
+                    <button type="button" class="btn-preset" id="btn-preset-en">English Preset</button>
+                    <button type="button" class="btn-preset" id="btn-preset-es">Español Preset</button>
+                    <button type="button" class="btn-preset" id="btn-preset-vi">Tiếng Việt Preset</button>
+                </div>
+                <button type="button" id="btn-transmit" class="btn-transmit">START PERMIT PIPELINE</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: HITL Approval Checkpoint -->
+    <div class="modal-overlay hitl-modal" id="hitl-modal" style="display: none;" role="dialog" aria-labelledby="hitl-title" aria-modal="true">
+        <div class="modal-content hitl-content">
+            <div class="modal-header">
+                <h3 id="hitl-title">Human Approval Required</h3>
+                <span class="hitl-badge">HITL CHECKPOINT</span>
+            </div>
+            <p class="hitl-subtitle">Review what the form asks vs. what the agent filled in. Only you can trigger final submission.</p>
+            <div class="hitl-comparison" id="hitl-comparison"></div>
+            <div class="hitl-compliance" id="hitl-compliance"></div>
+            <div class="hitl-token-row">
+                <input type="text" id="hitl-token-input" placeholder="Enter security code..." class="token-input" aria-label="Security approval code">
+                <span class="token-helper-hint" id="hitl-token-hint"></span>
+            </div>
+            <div class="hitl-actions">
+                <button class="btn btn-outline-danger" id="hitl-reject">Reject</button>
+                <button class="btn btn-filled-green" id="hitl-approve">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    Approve &amp; File
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+        }
+    }
+    </script>
+    <script type="module" src="app.js"></script>
+</body>
+</html>

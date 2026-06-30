@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+.env.*
+
+# Local secrets & PII vault (never commit)
+data/vault/
+data/vault/.vault_key
+*.vault_key
+
+# Runtime data
+data/hitl_audit.log
+data/filled_forms/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Cursor assets (optional local screenshots)
+assets/

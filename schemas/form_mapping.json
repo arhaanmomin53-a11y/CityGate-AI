@@ -1,0 +1,8 @@
+{
+  "$schema": "https://citygate.local/schemas/form-mapping/v1",
+  "title": "CityGate Form Mapping Schema",
+  "description": "Foundational JSON schema for mapping municipal form fields to agent-extracted data",
+  "form_types": ["business_license", "zoning_permit", "health_permit", "sign_permit", "municipal_notice"],
+  "field_types": ["text", "date", "number", "select", "signature", "checkbox"],
+  "pii_fields": ["tax_id", "ssn", "phone", "email", "owner_name"]
+}

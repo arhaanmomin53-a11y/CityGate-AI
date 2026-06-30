@@ -1,0 +1,35 @@
+[
+  {
+    "license_id": "LIC-001",
+    "business_id": "BIZ-LCF-001",
+    "business_name": "La Cocina Familiar LLC",
+    "license_type": "Business License",
+    "issue_date": "2025-06-15",
+    "expiry_date": "2026-06-15",
+    "days_until_expiry": 351,
+    "status": "active",
+    "renewal_started": false
+  },
+  {
+    "license_id": "LIC-002",
+    "business_id": "BIZ-LCF-001",
+    "business_name": "La Cocina Familiar LLC",
+    "license_type": "Health Permit",
+    "issue_date": "2025-06-15",
+    "expiry_date": "2026-04-01",
+    "days_until_expiry": 276,
+    "status": "active",
+    "renewal_started": false
+  },
+  {
+    "license_id": "LIC-003",
+    "business_id": "BIZ-OM-002",
+    "business_name": "Oak Market",
+    "license_type": "Business License",
+    "issue_date": "2024-07-20",
+    "expiry_date": "2026-07-15",
+    "days_until_expiry": 16,
+    "status": "renewal_due",
+    "renewal_started": false
+  }
+]
