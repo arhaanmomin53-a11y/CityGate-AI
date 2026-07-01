@@ -57,7 +57,7 @@ CityGate introduces an intelligent permit assistant capable of:
 - Protecting sensitive personal information
 - Routing applications for Human-in-the-Loop approval
 - Providing an intuitive dashboard with live analytics and 3D visualization
-
+<img width="1848" height="850" alt="Image" src="https://github.com/user-attachments/assets/9a59dded-5785-4d8f-ab0f-0cf0a5ef9eb1" />
 ---
 
 # ✨ Key Features
@@ -68,6 +68,7 @@ CityGate introduces an intelligent permit assistant capable of:
 - Supports multilingual citizen requests
 - Converts natural language into structured permit data
 - Easy onboarding for diverse users
+<img width="1856" height="852" alt="Image" src="https://github.com/user-attachments/assets/2afff4cb-bb58-4a62-a256-080fb00cc65d" />
 
 ---
 
@@ -128,6 +129,7 @@ The dashboard provides:
 - Compliance Analysis
 - Analytics Dashboard
 - Permit Archive
+<img width="1852" height="848" alt="Image" src="https://github.com/user-attachments/assets/69978c8d-df73-4c7c-98fb-9d46a0a8f7a9" />
 
 ---
 
@@ -141,6 +143,7 @@ Built using **Three.js**, the platform visualizes:
 - Permit pipeline status
 - Animated transitions
 - Real-time workflow updates
+<img width="1848" height="852" alt="Image" src="https://github.com/user-attachments/assets/80042382-91f2-416d-837b-5720e69d1c5c" />
 
 ---
 
